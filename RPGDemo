@@ -1,0 +1,159 @@
+class Character {
+    String name;
+    int health;
+    int mana;
+    int level;
+
+    public Character(String name, int health, int mana, int level) {
+        this.name = name;
+        this.health = health;
+        this.mana = mana;
+        this.level = level;
+    }
+
+    public void attack(Character target) {
+        int damage = this.level * 5;
+        System.out.println(this.name + " attacks " + target.name + " for " + damage + " damage.");
+        target.health -= damage;
+    }
+
+    public void defend() {
+        System.out.println(this.name + " defends.");
+        this.health += this.level * 2;
+    }
+
+    public void castSpell(Character target) {
+        if (this.mana >= 10) {
+            int spellDamage = this.level * 7;
+            System.out.println(this.name + " casts a spell on " + target.name + " for " + spellDamage + " damage.");
+            target.health -= spellDamage;
+            this.mana -= 10;
+        } else {
+            System.out.println(this.name + " does not have enough mana to cast a spell.");
+        }
+    }
+
+    public void levelUp() {
+        this.level++;
+        this.health += 10;
+        this.mana += 5;
+        System.out.println(this.name + " leveled up to level " + this.level + "!");
+    }
+}
+
+class Warrior extends Character {
+    int strength;
+    int armor;
+
+    public Warrior(String name, int health, int mana, int level, int strength, int armor) {
+        super(name, health, mana, level);
+        this.strength = strength;
+        this.armor = armor;
+    }
+
+    public void powerStrike(Character target) {
+        if (this.mana >= 5) {
+            int damage = this.strength * 2;
+            System.out.println(this.name + " performs Power Strike on " + target.name + " for " + damage + " damage.");
+            target.health -= damage;
+            this.mana -= 5;
+        } else {
+            System.out.println(this.name + " does not have enough mana to perform Power Strike.");
+        }
+    }
+
+    @Override
+    public void defend() {
+        super.defend();
+        this.armor += this.level;
+        System.out.println(this.name + "'s armor increases to " + this.armor + ".");
+    }
+}
+
+class Mage extends Character {
+    int intelligence;
+    int spellPower;
+
+    public Mage(String name, int health, int mana, int level, int intelligence, int spellPower) {
+        super(name, health, mana, level);
+        this.intelligence = intelligence;
+        this.spellPower = spellPower;
+    }
+
+    public void castFireball(Character target) {
+        if (this.mana >= 15) {
+            int damage = this.level * 5 + this.spellPower * 3;
+            System.out.println(this.name + " casts Fireball on " + target.name + " for " + damage + " damage.");
+            target.health -= damage;
+            this.mana -= 15;
+        } else {
+            System.out.println(this.name + " does not have enough mana to cast Fireball.");
+        }
+    }
+
+    @Override
+    public void castSpell(Character target) {
+        super.castSpell(target);
+        this.mana += this.intelligence;
+        System.out.println(this.name + "'s mana increases to " + this.mana + ".");
+    }
+}
+
+class Rogue extends Character {
+    int agility;
+    int dexterity;
+
+    public Rogue(String name, int health, int mana, int level, int agility, int dexterity) {
+        super(name, health, mana, level);
+        this.agility = agility;
+        this.dexterity = dexterity;
+    }
+
+    public void backstab(Character target) {
+        if (this.agility >= 5) {
+            int damage = (int) (this.dexterity * 2.5);
+            System.out.println(this.name + " performs Backstab on " + target.name + " for " + damage + " damage.");
+            target.health -= damage;
+            this.agility -= 5;
+        } else {
+            System.out.println(this.name + " does not have enough agility to perform Backstab.");
+        }
+    }
+
+    @Override
+    public void attack(Character target) {
+        super.attack(target);
+        this.agility += 1;
+        System.out.println(this.name + "'s agility increases to " + this.agility + ".");
+    }
+}
+
+public class RPGDemo {
+    public static void main(String[] args) {
+        Warrior warrior = new Warrior("Arthas", 100, 30, 5, 20, 10);
+        Mage mage = new Mage("Gandalf", 80, 50, 5, 15, 5);
+        Rogue rogue = new Rogue("Valeera", 90, 40, 5, 30, 35);
+
+        warrior.attack(mage);
+        mage.castSpell(warrior);
+        System.out.println("Gandalf uses his intelligence to preserve his mana.");
+        System.out.println();
+        rogue.attack(warrior);
+        System.out.println("Valeera gains agility, making her harder to hit. Opponents have a 5% higher chance of missing their attack on her.");
+        System.out.println();
+
+        warrior.powerStrike(mage);
+        System.out.println("Arthas uses his special ability to recieve a damage multiplier on his attack and deal more damage. Consequently, he is deducted 5 mana.");
+        System.out.println();
+        mage.castFireball(rogue);
+        System.out.println("Gandalf takes advantage of his magic to cast a powerful plasma blast, which in addition to the damage of his attack takes 3 fire ticks for 5.");
+        System.out.println();
+        rogue.backstab(warrior);
+        System.out.println("The backstab of Valeera is lethal. She uses her agility to get behind the enemy and deliver her powerful blow.");
+        System.out.println();
+
+        warrior.levelUp();
+        mage.levelUp();
+        rogue.levelUp();
+    }
+}
